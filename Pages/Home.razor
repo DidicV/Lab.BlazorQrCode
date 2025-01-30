@@ -1,0 +1,46 @@
+﻿@page "/"
+@inject IJSRuntime JS
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, Tobis Tech Bites!</h1>
+
+Welcome to your new app.
+
+<label for="text">Text:</label> <br />
+<input id="text" @bind="text" placeholder="Text" />
+<button @onclick="GenerateQrCode">Generate</button>
+<button @onclick="ClearQrCode">Clear</button>
+
+<p>
+    <canvas id="qrcode" class="@(string.IsNullOrEmpty(text) ? "hidden" : "")" />
+</p>
+
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+
+@code {
+    private string text;
+
+    override protected async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("qrGenerator.initializeQrCode", "qrcode");
+        }
+    }
+
+    private async Task GenerateQrCode(MouseEventArgs args)
+    {
+        await JS.InvokeAsync<string>("qrGenerator.generateQrCode", text);
+    }
+    
+    private async Task ClearQrCode(MouseEventArgs args)
+    {
+        text = string.Empty;
+        await JS.InvokeAsync<string>("qrGenerator.clearQrCode");
+    }
+}
