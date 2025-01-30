@@ -1,0 +1,55 @@
+@page "/signaturePlayground"
+@using Lab.BlazorQrCode.Models
+@inject IJSRuntime JS
+
+<PageTitle>Signature Playground</PageTitle>
+
+
+<button @onclick="GenerateKeyPair">Generate Key pair</button>
+
+<p>
+    <label>Public Key</label><br />
+    <textarea @bind="_keyPair.PublicKey"></textarea>
+</p>
+
+<p>
+    <label>Private Key</label><br />
+    <textarea @bind="_keyPair.PrivateKey"></textarea>
+</p>
+
+<p>
+    <label for="data">Data:</label> <br />
+    <input type="text" @bind="_data" placeholder="Data" /> <br />
+
+    <label for="signature">Signature:</label> <br />
+    <input type="text" @bind="_signature" placeholder="Signature" />
+</p>
+
+<button @onclick="SignData">Sign</button>
+<button @onclick="VerifySignature">Verify</button>
+
+<label>Is Valid:</label>
+<input type="checkbox" @bind="_isValid" /> 
+
+@code {
+
+    private KeyPair _keyPair = new KeyPair();
+    private string _data;
+    private string _signature;
+    private bool _isValid;
+
+    private async Task GenerateKeyPair(MouseEventArgs args)
+    {
+        _keyPair = await JS.InvokeAsync<KeyPair>("cryptoHelper.generateKeyPair");
+    }
+    
+    private async Task SignData(MouseEventArgs args)
+    {
+        _signature = await JS.InvokeAsync<string>("cryptoHelper.signData", _keyPair.PrivateKey, _data );
+    }
+
+    private async Task VerifySignature(MouseEventArgs args)
+    {
+        _isValid = await JS.InvokeAsync<bool>("cryptoHelper.verifySignature", _keyPair.PublicKey, _data, _signature);
+    }
+}
