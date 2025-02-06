@@ -1,7 +1,5 @@
 @using System.Diagnostics
-
 @page "/scanQrCode"
-
 @inject IJSRuntime JS
 
 <NavigationLock ConfirmExternalNavigation="false" OnBeforeInternalNavigation="@OnBeforeInternalNavigation"></NavigationLock>
@@ -11,7 +9,6 @@
 <textarea id="qrCodeData" class="form-control" rows="3" readonly @bind="qrCodeData"></textarea>
 
 @code {
-
     private string qrCodeData = string.Empty;
 
     override protected async Task OnAfterRenderAsync(bool firstRender)

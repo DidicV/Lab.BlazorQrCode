@@ -25,7 +25,7 @@ window.qrGenerator = {
 var qrScanner;
 window.qrScanHelper = {
     startScan: function (dotNetObject) {
-       qrScanner = new QrScanner(
+        qrScanner = new QrScanner(
             document.getElementById("qrScanner"),
             result => {
                 console.log('decoded qr code:', result)
@@ -38,9 +38,11 @@ window.qrScanHelper = {
             },
         );
         qrScanner.start();
+        
+
     },
 
-    stopScan: function () {
-      qrScanner.stop();
+     stopScan: function () {
+        qrScanner.stop();
     }
 };
