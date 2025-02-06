@@ -1,0 +1,38 @@
+@using System.Diagnostics
+
+@page "/scanQrCode"
+
+@inject IJSRuntime JS
+
+<NavigationLock ConfirmExternalNavigation="false" OnBeforeInternalNavigation="@OnBeforeInternalNavigation"></NavigationLock>
+
+<video id="qrScanner"></video>
+
+<textarea id="qrCodeData" class="form-control" rows="3" readonly @bind="qrCodeData"></textarea>
+
+@code {
+
+    private string qrCodeData = string.Empty;
+
+    override protected async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("qrScanHelper.startScan", DotNetObjectReference.Create(this));
+        }
+    }
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        await JS.InvokeVoidAsync("qrScanHelper.stopScan", DotNetObjectReference.Create(this));
+    }
+
+    [JSInvokable]
+    public async Task OnQrCodeScanned(string qrCodeData)
+    {
+        Console.WriteLine($"Original QR Code Data: {qrCodeData}");
+        Debug.WriteLine($"Original QR Code Data: {qrCodeData}");
+        this.qrCodeData = qrCodeData;
+        StateHasChanged();
+    }
+}

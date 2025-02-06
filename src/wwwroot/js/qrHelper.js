@@ -21,3 +21,26 @@ window.qrGenerator = {
     }
 
 }
+
+var qrScanner;
+window.qrScanHelper = {
+    startScan: function (dotNetObject) {
+       qrScanner = new QrScanner(
+            document.getElementById("qrScanner"),
+            result => {
+                console.log('decoded qr code:', result)
+                dotNetObject.invokeMethodAsync('OnQrCodeScanned', result.data);
+            },
+            { 
+                highlightScanRegion: true,
+                highlightCodeOutline: true,
+              
+            },
+        );
+        qrScanner.start();
+    },
+
+    stopScan: function () {
+      qrScanner.stop();
+    }
+};
