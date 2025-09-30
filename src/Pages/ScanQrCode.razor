@@ -4,9 +4,52 @@
 
 <NavigationLock ConfirmExternalNavigation="false" OnBeforeInternalNavigation="@OnBeforeInternalNavigation"></NavigationLock>
 
-<video id="qrScanner"></video>
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
 
-<textarea id="qrCodeData" class="form-control" rows="3" readonly @bind="qrCodeData"></textarea>
+            <!-- Video Scanner -->
+            <div class="video-container mb-3">
+                <video id="qrScanner" autoplay playsinline></video>
+            </div>
+
+            <!-- QR Code Result -->
+            <div class="form-group">
+                <label for="qrCodeData" class="form-label">Scanned QR Code</label>
+                <textarea id="qrCodeData"
+                          class="form-control"
+                          rows="3"
+                          readonly
+                          @bind="qrCodeData"></textarea>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .video-container {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        overflow: hidden;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures full coverage */
+        }
+
+    textarea {
+        font-size: 0.95rem;
+    }
+</style>
 
 @code {
     private string qrCodeData = string.Empty;
